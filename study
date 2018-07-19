@@ -1,0 +1,83 @@
+from collections import Iterator
+from collections import Iterable
+class next1():
+    def __init__(self,data):
+        self.data = data
+        self.count = 0
+    def __next__(self):
+        print('迭代器被调用了')
+        if self.count < len(self.data):
+            val = self.data[self.count]
+            self.count+=1
+            return val
+        else:
+            raise StopIteration
+class iterable():
+    def __init__(self,data):
+        self.data = data
+        self.count = 0
+    def __iter__(self):
+        print('__iter__被调用了')
+        return next1(self.data)
+    
+        
+a = iterable([3,46,74,23])
+print(type(a))
+print(isinstance(a,Iterable)) # 显示为True，因为iterable类实现了__iter__方法
+                              # 是一个可迭代的对象
+print(isinstance(a,Iterator)) # 显示为False，因为iterable类没有实现 __next__方法
+                              # 故不是迭代器
+aa = iter(a)
+print(type(aa))
+print(isinstance(aa,Iterable))
+print(isinstance(aa,Iterator))
+class iterable1():
+    def __init__(self,data):
+        self.data = data
+        self.count = 0
+    def __iter__(self):
+        print('__iter__被调用了')
+        return self
+    def __next__(self):
+        print('__next__被调用了')
+        if self.count < len(self.data):
+            val = self.data[self.count]
+            self.count+=1
+            return val
+        else:
+            raise StopIteration
+b = iterable1([3,4,5,6])
+print(isinstance(b,Iterable))
+print(isinstance(b,Iterator))
+# 以上两个都显示True，因为iterable1 类不仅实现了__iter__方法(可迭代对象)
+# 也实现了__next__方法（迭代器）
+# 故，iteralbe1 既是可迭代对象，又是迭代器
+class iterable2():
+    def __init__(self,data):
+        self.data = data
+        self.count = 0
+    def __next__(self):
+        print('__next__被调用了')
+        if self.count < len(self.data):
+            val = self.data[self.count]
+            self.count += 1
+            return val
+        else:
+            raise StopIteration
+c = iterable2([3,2,3,5])
+print(isinstance(c,Iterable)) #显示False，说明不是可迭代对象，因为没有iter方法
+print(isinstance(c,Iterator))
+
+
+
+for i in b:
+    print(i)
+for i in a:
+    print(i)
+print(next(aa))
+
+print(next(aa))
+#迭代器是这样的对象：实现了无参数的 __next__ 方法，返回序列中的下一个元素；
+#如果没有元素了，那么抛出 StopIteration 异常。 Python 中的迭代器还实现了__iter__ 方法，因此迭代器可以迭代。
+#重要：python中的可迭代对象必须要实现__iter__方法，但是不能实现__next__方法，因为这样就成了迭代器
+#    而迭代器要实现__next__方法，也要实现__iter__方法。
